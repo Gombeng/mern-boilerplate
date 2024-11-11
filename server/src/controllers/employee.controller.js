@@ -1,8 +1,8 @@
 const asyncHandler = require("express-async-handler");
-const UserModel = require("../models/user.model");
+const EmployeeModel = require("../models/employee.model");
 
 const getAll = asyncHandler(async (req, res, next) => {
-  await UserModel.find()
+  await EmployeeModel.find()
     .then((user) => res.status(200).json(user))
     .catch((error) => next(error));
 });
@@ -10,22 +10,46 @@ const getAll = asyncHandler(async (req, res, next) => {
 const getOne = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
 
-  await UserModel.findById(id)
+  await EmployeeModel.findById(id)
     .then((user) => res.status(200).json(user))
     .catch((error) => next(error));
 });
 
 const create = asyncHandler(async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const {
+    employeeId,
+    employeeName,
+    role,
+    employeeStatus,
+    employeeEmail,
+    employeePhone,
+    joinDate,
+    endDate,
+    isActive,
+    adminAccess,
+    photoUrl,
+  } = req.body;
 
   //  * use req.file for handling image
   // const image = req.file.path;
 
-  const data = new UserModel({ name, email, password });
+  const data = new EmployeeModel({
+    employeeId,
+    employeeName,
+    role,
+    employeeStatus,
+    employeeEmail,
+    employeePhone,
+    joinDate,
+    endDate,
+    isActive,
+    adminAccess,
+    photoUrl,
+  });
 
   await data
     .save()
-    .then((user) => res.status(200).json({ user: user }))
+    .then((user) => res.status(200).json({ employee: user }))
     .catch((error) => next(error));
 });
 
@@ -34,7 +58,7 @@ const update = asyncHandler(async (req, res, next) => {
   const updatedData = req.body;
   const options = { new: true };
 
-  await UserModel.findByIdAndUpdate(id, updatedData, options)
+  await EmployeeModel.findByIdAndUpdate(id, updatedData, options)
     .then((user) => res.status(200).json(user))
     .catch((error) => next(error));
 });
@@ -42,7 +66,7 @@ const update = asyncHandler(async (req, res, next) => {
 const remove = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
 
-  await UserModel.findByIdAndDelete(id)
+  await EmployeeModel.findByIdAndDelete(id)
 
     .then(({ username }) =>
       res.status(200).json({
